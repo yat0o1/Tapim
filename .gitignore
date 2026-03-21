@@ -10,3 +10,7 @@ __pycache__/
 
 # VS Code settings
 .vscode/
+
+# test html
+.test_chat.html
+

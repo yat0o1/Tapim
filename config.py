@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     DB_NAME: str
     SECRET_KEY: str
     ADMIN_SECRET_KEY: str
+    MAIL_USERNAME: str
+    MAIL_PASSWORD: str
+    MAIL_FROM: str
 
     @property
     def DATABASE_URL_asyncpg(self):
