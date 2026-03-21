@@ -447,6 +447,8 @@ Get all vacancies.
 [
   {
     "id": "uuid",
+    "source_id": 123,
+    "source_type": "hh",
     "company_name": "Google",
     "position_name": "Senior Backend Developer",
     "location": "Almaty",
@@ -456,7 +458,7 @@ Get all vacancies.
     "salary_currency": "KZT",
     "salary_type": "monthly",
     "vacancy_description": "...",
-    "tags": ["Python", "FastAPI", "PostgreSQL"],
+    "tags": ["Python", "FastAPI"],
     "contact_name": "HR Manager",
     "contact_phone": "+77001234567",
     "contact_social": "...",
