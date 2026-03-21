@@ -15,7 +15,6 @@ from sqlalchemy import select, insert, update, delete
 from models import users, profiles, companies, email_verifications
 from auth_utils import hash_password, verify_password
 from config import settings
-from email_utils import send_verification_code
 from models import email_verifications
 
 router = APIRouter(
@@ -67,7 +66,6 @@ async def register_applicant(cred: ApplicantRegister):
         await conn.commit()
 
     # отправить код верификации
-    await send_verification_code(new_user_id, cred.email)
 
     return {"message": "Registered successfully, check your email for verification code", "user_id": new_user_id}
 
@@ -98,7 +96,6 @@ async def register_recruiter_step1(cred: RecruiterRegisterStep1):
         )
         await conn.commit()
 
-    await send_verification_code(new_user_id, cred.email)
 
     return {"message": "Step 1 complete, check your email", "user_id": new_user_id}
 
@@ -174,7 +171,6 @@ async def forgot_password(data: ForgotPassword):
             # не говорим что юзер не найден — безопасность
             return {"message": "If this email exists, a code has been sent"}
 
-        await send_verification_code(user.id, data.email)
 
     return {"message": "If this email exists, a code has been sent"}
 
