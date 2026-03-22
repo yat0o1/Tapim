@@ -107,6 +107,67 @@ async def delete_education(user_id: int, edu_id: int):
         await conn.commit()
     return {"message": "Education deleted"}
 
+@router.get("/")
+async def get_all_profiles():
+    async with async_engine.connect() as conn:
+        # Получаем профили с нужными полями
+        result = await conn.execute(
+            select(
+                profiles.c.user_id,
+                profiles.c.first_name,
+                profiles.c.last_name,
+                profiles.c.specialization,
+                profiles.c.city,
+                profiles.c.level,
+                profiles.c.salary_min,
+                profiles.c.salary_max,
+            )
+        )
+        profiles_data = result.mappings().all()
+
+        if not profiles_data:
+            return []
+
+        # Получаем скиллы всех юзеров одним запросом
+        skills_result = await conn.execute(
+            select(user_skills.c.user_id, skills.c.name)
+            .join(skills, skills.c.id == user_skills.c.skill_id)
+        )
+        # Группируем скиллы по user_id: {user_id: [skill1, skill2, ...]}
+        skills_map = {}
+        for row in skills_result.mappings().all():
+            skills_map.setdefault(row["user_id"], []).append(row["name"])
+
+    # Собираем итоговый список
+    def count_filled(p):
+        score = 0
+        for field in ["first_name", "last_name", "specialization", "city", "level", "salary_min", "salary_max"]:
+            if p[field] is not None and p[field] != "":
+                score += 1
+        # Скиллы тоже считаем — каждый скилл +1
+        if skills_map.get(p["user_id"]):
+            score += 1
+        return score
+
+    result_list = [
+        {
+            "user_id": p["user_id"],
+            "first_name": p["first_name"],
+            "last_name": p["last_name"],
+            "specialization": p["specialization"],
+            "city": p["city"],
+            "level": p["level"],
+            "salary_min": p["salary_min"],
+            "salary_max": p["salary_max"],
+            "skills": skills_map.get(p["user_id"], []),
+        }
+        for p in profiles_data
+    ]
+
+    result_list.sort(key=count_filled, reverse=True)
+
+    return result_list
+
 @router.get("/{user_id}")
 async def get_profile(user_id: int):
     async with async_engine.connect() as conn:

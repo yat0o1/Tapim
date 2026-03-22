@@ -220,7 +220,9 @@ Get full profile of a user including skills, experience and education.
     "bio": "Experienced developer...",
     "github_url": "https://github.com/johndoe",
     "linkedin_url": "https://linkedin.com/in/johndoe",
-    "resume_url": null
+    "resume_url": null,
+    "salary_min": 300000,
+    "salary_max": 600000,
   },
   "skills": [
     {"id": 1, "name": "Python"},
@@ -666,4 +668,44 @@ POST /auth/login → get token
 ```
 POST /auth/forgot-password → send code to email
 POST /auth/reset-password → set new password with code
+```
+
+#### `GET /profiles/`
+Get all profiles sorted by completeness (most filled first).
+
+**Response `200`:**
+```json
+[
+  {
+    "user_id": 5,
+    "first_name": "John",
+    "last_name": "Doe",
+    "specialization": "Backend Developer",
+    "city": "Almaty",
+    "level": "middle",
+    "salary_min": 300000,
+    "salary_max": 600000,
+    "skills": ["Python", "FastAPI", "PostgreSQL"]
+  }
+]
+```
+
+#### `GET /profiles/`
+Get all profiles sorted by completeness (most filled first).
+
+**Response `200`:**
+```json
+[
+  {
+    "user_id": 5,
+    "first_name": "John",
+    "last_name": "Doe",
+    "specialization": "Backend Developer",
+    "city": "Almaty",
+    "level": "middle",
+    "salary_min": 300000,
+    "salary_max": 600000,
+    "skills": ["Python", "FastAPI", "PostgreSQL"]
+  }
+]
 ```

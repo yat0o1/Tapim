@@ -80,6 +80,8 @@ profiles = Table(
     Column("github_url", String(255)),
     Column("linkedin_url", String(255)),
     Column("resume_url", Text),
+    Column("salary_min", Integer, nullable=True),
+    Column("salary_max", Integer, nullable=True),
 )
 
 # Для рекрутеров
