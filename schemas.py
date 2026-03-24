@@ -2,6 +2,8 @@ from typing import Literal, Optional, List
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 from email_validator import validate_email, EmailNotValidError
 from datetime import datetime
+from typing import List, Optional
+import uuid
 
 
 class UserLogin(BaseModel):
@@ -116,3 +118,17 @@ class ResetPassword(BaseModel):
         if self.new_password != self.confirm_password:
             raise ValueError("Passwords do not match")
         return self
+    
+class VacancyCreate(BaseModel):
+    company_name: str
+    location: Optional[str] = None
+    specialization: Optional[str] = None
+    position_name: str
+    vacancy_description: Optional[str] = None
+    salary_min: Optional[int] = None
+    salary_max: Optional[int] = None
+    salary_currency: Optional[str] = None
+    salary_type: Optional[str] = None
+    contact_name: Optional[str] = None
+    contact_phone: Optional[str] = None
+    contact_social: Optional[str] = None

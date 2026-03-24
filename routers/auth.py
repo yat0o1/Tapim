@@ -12,10 +12,9 @@ from fastapi import HTTPException, APIRouter, Response
 from database import async_engine
 from datetime import datetime
 from sqlalchemy import select, insert, update, delete
-from models import users, profiles, companies, email_verifications
+from models import users, profiles, companies, email_verifications , roles
 from auth_utils import hash_password, verify_password
 from config import settings
-from models import email_verifications
 
 router = APIRouter(
     prefix="/auth",
@@ -120,7 +119,9 @@ async def register_recruiter_step2(cred: RecruiterRegisterStep2):
 async def login(cred: UserLogin, response: Response):
     async with async_engine.connect() as conn:
         result = await conn.execute(
-            select(users).where(users.c.email == cred.email)
+            select(users, roles.c.name.label("role_name"))
+            .join(roles, users.c.role_id == roles.c.id)
+            .where(users.c.email == cred.email)
         )
         user = result.fetchone()
 
@@ -130,7 +131,10 @@ async def login(cred: UserLogin, response: Response):
         token = security.create_access_token(uid=str(user.id))
         response.set_cookie(config.JWT_ACCESS_COOKIE_NAME, token)
 
-    return {"access_token": token}
+    return {
+        "access_token": token,
+        "role": user.role_name  # "applicant", "recruiter", "admin"
+    }
 
 @router.post("/verify-email")
 async def verify_email(data: VerifyEmail):

@@ -1,3 +1,4 @@
+import uuid
 from fastapi import APIRouter, Query
 from sqlalchemy import select, and_
 from database import async_engine
@@ -5,7 +6,8 @@ from models import vacancies
 from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy import cast
-from sqlalchemy.dialects.postgresql import ARRAY, TEXT
+from sqlalchemy.dialects.postgresql import ARRAY, TEXT, insert
+from schemas import VacancyCreate
 
 router = APIRouter(
     prefix="/vacancies",
@@ -85,7 +87,37 @@ async def search_vacancies(
             result = await conn.execute(select(vacancies))
 
         return result.mappings().all()
+    
+@router.post("/")
+async def create_vacancy(data: VacancyCreate):
+    # Формируем теги
+    tags = []
 
+    if data.location:
+        tags.append(data.location)
+
+    if data.specialization:
+        tags.append(data.specialization)
+
+    if data.salary_min is not None or data.salary_max is not None:
+        tags.append("salary_specified")
+
+    # Делаем payload безопасно (без конфликтов ключей)
+    payload = data.model_dump(exclude={"id", "tags", "source_type"})
+
+    payload.update({
+        "id": str(uuid.uuid4()),
+        "source_type": "manual",
+        "tags": tags if tags else None
+    })
+
+    async with async_engine.connect() as conn:
+        await conn.execute(
+            insert(vacancies).values(**payload)
+        )
+        await conn.commit()
+
+    return {"message": "Vacancy created successfully"}
 
 # Get vacancy by id
 @router.get("/{vacancy_id}")
