@@ -133,3 +133,10 @@ class VacancyCreate(BaseModel):
     contact_name: Optional[str] = None
     contact_phone: Optional[str] = None
     contact_social: Optional[str] = None
+    created_by: Optional[int] = None
+
+class CompanyUpdate(BaseModel):
+    company_name: Optional[str] = None
+    company_size: Optional[Literal["small", "medium", "big"]] = None
+    company_site: Optional[str] = None
+    user_role_in_company: Optional[str] = None

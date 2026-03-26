@@ -43,6 +43,7 @@ vacancies = Table(
     Column("contact_phone", String(100)),
     Column("contact_social", String(500)),
     Column("tags", ARRAY(String)),
+    Column("created_by", Integer, ForeignKey("users.id"), nullable=True),
 )
 
 applications = Table(
