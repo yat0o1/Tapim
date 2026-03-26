@@ -6,6 +6,25 @@ from schemas import ProfileUpdate, ContactsUpdate, BioUpdate, SkillsUpdate, Work
 
 router = APIRouter(prefix="/profiles", tags=["profiles"])
 
+@router.post("/{user_id}")
+async def create_profile(user_id: int, data: ProfileUpdate):
+    values = {k: v for k, v in data.model_dump().items() if v is not None}
+
+    async with async_engine.connect() as conn:
+        # ❗ проверка — вдруг уже есть профиль
+        existing = await conn.execute(
+            select(profiles).where(profiles.c.user_id == user_id)
+        )
+
+        if existing.fetchone():
+            raise HTTPException(status_code=400, detail="Profile already exists")
+
+        await conn.execute(
+            insert(profiles).values(user_id=user_id, **values)
+        )
+        await conn.commit()
+
+    return {"message": "Profile created"}
 
 @router.put("/{user_id}")
 async def update_profile(user_id: int, data: ProfileUpdate):
@@ -205,3 +224,18 @@ async def get_profile(user_id: int):
         "experience": exp_data,
         "education": edu_data,
     }
+
+@router.delete("/{user_id}")
+async def delete_profile(user_id: int):
+    async with async_engine.connect() as conn:
+        # удаляем зависимости
+        await conn.execute(delete(user_skills).where(user_skills.c.user_id == user_id))
+        await conn.execute(delete(work_experience).where(work_experience.c.user_id == user_id))
+        await conn.execute(delete(education).where(education.c.user_id == user_id))
+
+        # удаляем сам профиль
+        await conn.execute(delete(profiles).where(profiles.c.user_id == user_id))
+
+        await conn.commit()
+
+    return {"message": "Profile deleted"}

@@ -72,7 +72,9 @@ class ProfileUpdate(BaseModel):
     specialization: Optional[str] = None
     city: Optional[str] = None
     work_format: Optional[Literal["remote", "hybrid", "fulltime"]] = None
-    level: Optional[Literal["junior", "middle", "senior"]] = None
+    level: Optional[Literal["intern","junior", "middle", "senior","lead"]] = None
+    salary_min: Optional[int] = None
+    salary_max: Optional[int] = None
 
 class ContactsUpdate(BaseModel):
     phone: Optional[str] = None
@@ -135,7 +137,7 @@ class VacancyCreate(BaseModel):
     contact_social: Optional[str] = None
     created_by: Optional[int] = None
     skills: Optional[List[str]] = None
-    
+
 class CompanyUpdate(BaseModel):
     company_name: Optional[str] = None
     company_size: Optional[Literal["small", "medium", "big"]] = None

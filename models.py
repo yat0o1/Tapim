@@ -164,3 +164,13 @@ favorites = Table(
     Column("vacancy_id", UUID, ForeignKey("vacancies.id")),
     Column("created_at", TIMESTAMP, server_default=func.now()),
 )
+
+
+favorite_worksheets = Table(
+    "favorite_worksheets",
+    metadata_obj,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("profile_id", Integer, ForeignKey("profiles.id", ondelete="CASCADE")),
+    Column("created_at", TIMESTAMP, server_default=func.now()),
+)

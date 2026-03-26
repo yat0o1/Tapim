@@ -1,11 +1,10 @@
 import uuid
 from fastapi import APIRouter, Query
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_ , cast, delete
 from database import async_engine
 from models import vacancies
 from datetime import datetime, timedelta
 from typing import Optional
-from sqlalchemy import cast
 from sqlalchemy.dialects.postgresql import ARRAY, TEXT, insert
 from schemas import VacancyCreate
 
@@ -118,6 +117,25 @@ async def create_vacancy(data: VacancyCreate):
         await conn.commit()
 
     return {"message": "Vacancy created successfully"}
+
+@router.get("/my/{user_id}")
+async def get_my_vacancies(user_id: int):
+    async with async_engine.connect() as conn:
+        result = await conn.execute(
+            select(vacancies).where(vacancies.c.created_by == user_id)
+        )
+        return result.mappings().all()
+
+
+@router.delete("/{vacancy_id}")
+async def delete_vacancy(vacancy_id: str):
+    async with async_engine.connect() as conn:
+        await conn.execute(
+            delete(vacancies).where(vacancies.c.id == vacancy_id)
+        )
+        await conn.commit()
+    return {"message": "Vacancy deleted"}
+
 
 # Get vacancy by id
 @router.get("/{vacancy_id}")
