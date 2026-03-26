@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from routers import auth, vacancies, chat, profiles
+from routers import auth, vacancies, chat, profiles , favorites
 
 
 app = FastAPI(title="Tap.im API", version="1.0")
@@ -19,6 +19,7 @@ app.include_router(auth.router)
 app.include_router(vacancies.router) 
 app.include_router(chat.router)
 app.include_router(profiles.router)
+app.include_router(favorites.router)
 
 
 @app.exception_handler(RequestValidationError)

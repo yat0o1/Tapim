@@ -144,3 +144,12 @@ email_verifications = Table(
     Column("expires_at", TIMESTAMP, nullable=False),
     Column("is_used", Boolean, server_default="false"),
 )
+
+favorites = Table(
+    "favorites",
+    metadata_obj,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("vacancy_id", UUID, ForeignKey("vacancies.id")),
+    Column("created_at", TIMESTAMP, server_default=func.now()),
+)
