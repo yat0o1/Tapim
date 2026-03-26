@@ -1,7 +1,7 @@
 from typing import Literal, Optional, List
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 from email_validator import validate_email, EmailNotValidError
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 import uuid
 
@@ -88,15 +88,16 @@ class SkillsUpdate(BaseModel):
 class WorkExperienceCreate(BaseModel):
     position: str
     company_name: str
-    start_date: datetime
-    end_date: Optional[datetime] = None
+    start_date: date
+    end_date: Optional[date] = None
     description: Optional[str] = None
+
 
 class EducationCreate(BaseModel):
     specialization: str
     university: str
-    start_date: datetime
-    end_date: Optional[datetime] = None
+    start_date: date
+    end_date: Optional[date] = None
 
 # ─── EMAIL verification
 

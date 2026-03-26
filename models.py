@@ -1,6 +1,8 @@
 from sqlalchemy import Table, Column, Integer, String, Text, TIMESTAMP, Boolean, ForeignKey, MetaData , BOOLEAN
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.sql import func
+from sqlalchemy import Date
+
 
 metadata_obj = MetaData()
 
@@ -117,8 +119,8 @@ work_experience = Table(
     Column("user_id", Integer, ForeignKey("users.id")),
     Column("position", String(255)),
     Column("company_name", String(255)),
-    Column("start_date", TIMESTAMP),
-    Column("end_date", TIMESTAMP, nullable=True),  # null = работает сейчас
+    Column("start_date", Date),
+    Column("end_date", Date, nullable=True),
     Column("description", Text),
 )
 
@@ -129,8 +131,8 @@ education = Table(
     Column("user_id", Integer, ForeignKey("users.id")),
     Column("specialization", String(255)),
     Column("university", String(255)),
-    Column("start_date", TIMESTAMP),
-    Column("end_date", TIMESTAMP, nullable=True),
+    Column("start_date", Date),
+    Column("end_date", Date, nullable=True),
 )
 
 # Верификация email
