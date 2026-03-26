@@ -128,15 +128,23 @@ class VacancyCreate(BaseModel):
     vacancy_description: Optional[str] = None
     salary_min: Optional[int] = None
     salary_max: Optional[int] = None
-    salary_currency: Optional[str] = None
+    salary_currency: Optional[str] = "KZT"
     salary_type: Optional[str] = None
     contact_name: Optional[str] = None
     contact_phone: Optional[str] = None
     contact_social: Optional[str] = None
     created_by: Optional[int] = None
-
+    skills: Optional[List[str]] = None
+    
 class CompanyUpdate(BaseModel):
     company_name: Optional[str] = None
     company_size: Optional[Literal["small", "medium", "big"]] = None
     company_site: Optional[str] = None
     user_role_in_company: Optional[str] = None
+    city: Optional[str] = None
+    industry: Optional[str] = None
+    about: Optional[str] = None
+    linkedin: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    stack: Optional[List[str]] = None

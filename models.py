@@ -44,6 +44,7 @@ vacancies = Table(
     Column("contact_social", String(500)),
     Column("tags", ARRAY(String)),
     Column("created_by", Integer, ForeignKey("users.id"), nullable=True),
+    Column("skills", ARRAY(String)),
 )
 
 applications = Table(
@@ -94,9 +95,16 @@ companies = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("user_id", Integer, ForeignKey("users.id")),
     Column("company_name", String(255)),
-    Column("company_size", String(50)),     # small, medium, big
+    Column("company_size", String(50)),
     Column("company_site", String(255)),
     Column("user_role_in_company", String(100)),
+    Column("city", String(100)),
+    Column("industry", String(100)),
+    Column("about", Text),
+    Column("linkedin", String(255)),
+    Column("phone", String(50)),
+    Column("email", String(255)),
+    Column("stack", ARRAY(String)),
 )
 
 skills = Table(
