@@ -123,10 +123,10 @@ class ResetPassword(BaseModel):
         return self
     
 class VacancyCreate(BaseModel):
+    position_name: Optional[str] = None
     company_name: str
     location: Optional[str] = None
     specialization: Optional[str] = None
-    position_name: str
     vacancy_description: Optional[str] = None
     salary_min: Optional[int] = None
     salary_max: Optional[int] = None
@@ -136,7 +136,13 @@ class VacancyCreate(BaseModel):
     contact_phone: Optional[str] = None
     contact_social: Optional[str] = None
     created_by: Optional[int] = None
-    skills: Optional[List[str]] = None
+
+    # Новые поля (только для формирования тегов, не идут в таблицу напрямую)
+    skills: Optional[list[str]] = None
+    level: Optional[str] = None          # junior / intern / middle / senior / lead
+    work_format: Optional[str] = None    # remote / office / hybrid
+    employment_type: Optional[str] = None  # full / part / internship
+    
 
 class CompanyUpdate(BaseModel):
     company_name: Optional[str] = None

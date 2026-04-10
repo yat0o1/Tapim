@@ -21,8 +21,8 @@ users = Table(
     Column("password_hash", Text, nullable=False),
     Column("role_id", Integer, ForeignKey("roles.id")),
     Column("created_at", TIMESTAMP, server_default=func.now()),
+    
 )
-
 vacancies = Table(
     "vacancies",
     metadata_obj,
@@ -44,7 +44,6 @@ vacancies = Table(
     Column("contact_social", String(500)),
     Column("tags", ARRAY(String)),
     Column("created_by", Integer, ForeignKey("users.id"), nullable=True),
-    Column("skills", ARRAY(String)),
 )
 
 applications = Table(

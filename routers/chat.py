@@ -89,3 +89,33 @@ async def get_unread_count(user_id: int):
         )
         count = result.scalar()
     return {"unread_count": count}
+
+@router.get("/conversations/{user_id}")
+async def get_conversations(user_id: int):
+    async with async_engine.connect() as conn:
+        # получаем все уникальные собеседники
+        result = await conn.execute(
+            select(messages)
+            .where(
+                or_(
+                    messages.c.sender_id == user_id,
+                    messages.c.receiver_id == user_id
+                )
+            )
+            .order_by(messages.c.created_at.desc())
+        )
+        all_msgs = result.mappings().all()
+
+    # достаем уникальных собеседников с последним сообщением
+    seen = {}
+    for msg in all_msgs:
+        other_id = msg["receiver_id"] if msg["sender_id"] == user_id else msg["sender_id"]
+        if other_id not in seen:
+            seen[other_id] = {
+                "user_id": other_id,
+                "last_message": msg["content"],
+                "last_message_at": msg["created_at"],
+                "is_read": msg["is_read"]
+            }
+
+    return list(seen.values())
