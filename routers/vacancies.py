@@ -93,7 +93,7 @@ async def search_vacancies(
         if tags:
             for tag in tags:
                 conditions.append(
-                    vacancies.c.tags.contains(cast([tag], ARRAY(TEXT)))
+                    vacancies.c.tags.contains(cast([tag.lower()], ARRAY(TEXT)))
                 )
 
         if salary_min is not None:
