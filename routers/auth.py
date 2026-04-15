@@ -97,7 +97,7 @@ async def register_recruiter_step1(cred: RecruiterRegisterStep1):
         )
         await conn.commit()
 
-        await send_verification_code(new_user_id, cred.email)
+    # await send_verification_code(new_user_id, cred.email)
 
 
     return {"message": "Step 1 complete, check your email", "user_id": new_user_id}
